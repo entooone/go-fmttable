@@ -4,11 +4,11 @@ import (
 	"log"
 	"os"
 
-	"github.com/entooone/go-ftable"
+	"github.com/entooone/go-fmttable"
 )
 
 func main() {
-	table, err := ftable.ReadTableMD(os.Stdin)
+	table, err := fmttable.ReadTableMD(os.Stdin)
 	if err != nil {
 		log.Fatal(err)
 	}

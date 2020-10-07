@@ -1,4 +1,4 @@
-package ftable
+package fmttable
 
 import (
 	"fmt"

@@ -1,6 +1,6 @@
-# go-ftable
+# go-fmttable
 
-## How to install
+## Installation
 
 ```
 $ go get -u github.com/entooone/go-ftable/cmd/goft

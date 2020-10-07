@@ -1,4 +1,4 @@
-module github.com/entooone/go-ftable
+module github.com/entooone/go-fmttable
 
 go 1.15
 
