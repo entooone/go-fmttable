@@ -13,5 +13,5 @@ func main() {
 		log.Fatal(err)
 	}
 
-	table.Pretty()
+	table.Pretty(os.Stdout)
 }

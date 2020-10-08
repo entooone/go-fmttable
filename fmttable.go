@@ -11,7 +11,7 @@ import (
 
 type Table [][]string
 
-func (t Table) Pretty() {
+func (t Table) Pretty(w io.Writer) {
 	maxCol := len(t[0])
 	for _, row := range t {
 		if len(row) > maxCol {
@@ -32,9 +32,9 @@ func (t Table) Pretty() {
 	for _, row := range t {
 		for i, v := range row {
 			fv := runewidth.FillRight(v, colSizes[i])
-			fmt.Printf("| %s ", fv)
+			fmt.Fprintf(w, "| %s ", fv)
 		}
-		fmt.Printf("|\n")
+		fmt.Fprintf(w, "|\n")
 	}
 }
 
