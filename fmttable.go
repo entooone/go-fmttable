@@ -11,6 +11,7 @@ import (
 
 type Table [][]string
 
+// Pretty write the Markdown table to w
 func (t Table) Pretty(w io.Writer) {
 	maxCol := len(t[0])
 	for _, row := range t {
@@ -51,6 +52,7 @@ func readLineMD(line string) []string {
 	return es
 }
 
+// ReadTableMD load Table from a Markdown table
 func ReadTableMD(r io.Reader) (Table, error) {
 	s, err := ioutil.ReadAll(r)
 	if err != nil {
