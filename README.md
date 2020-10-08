@@ -1,5 +1,7 @@
 # go-fmttable
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/entooone/go-fmttable)](https://goreportcard.com/report/github.com/entooone/go-fmttable)
+
 ## Installation
 
 ```
