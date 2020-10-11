@@ -19,18 +19,18 @@ import (
 	"testing"
 )
 
-func isValid(got, want Table) bool {
-	if len(got) != len(want) {
+func isValid(a, b Table) bool {
+	if len(a) != len(b) {
 		return false
 	}
 
-	for i := 0; i < len(want); i++ {
-		if len(got[i]) != len(want[i]) {
+	for i := 0; i < len(b); i++ {
+		if len(a[i]) != len(b[i]) {
 			return false
 		}
 
-		for j := 0; j < len(want[i]); j++ {
-			if got[i][j] != want[i][j] {
+		for j := 0; j < len(b[i]); j++ {
+			if a[i][j] != b[i][j] {
 				return false
 			}
 		}
@@ -39,24 +39,50 @@ func isValid(got, want Table) bool {
 }
 
 func TestReadTableMD(t *testing.T) {
-	data := map[string]struct {
+	t.Parallel()
+	tests := map[string]struct {
 		rawTable string
 		want     Table
 	}{
-		"Read Markdown Table": {
+		"empty": {
+			rawTable: "",
+			want:     Table{},
+		},
+		"single line": {
 			rawTable: `| a | b | c |`,
-			want:     Table([][]string{{"a", "b", "c"}}),
+			want:     Table{{"a", "b", "c"}},
+		},
+		"multi line": {
+			rawTable: `
+			| a | b | c |
+			| golang | hello | gopher |`,
+			want: Table{{"a", "b", "c"}, {"golang", "hello", "gopher"}},
+		},
+		"uneven table": {
+			rawTable: `
+			| a | b |
+			| foo | bar | baz | qux | quux |
+			| golang | hello | gopher |`,
+			want: Table{
+				{"a", "b"},
+				{"foo", "bar", "baz", "qux", "quux"},
+				{"golang", "hello", "gopher"},
+			},
 		},
 	}
 
-	for s, v := range data {
-		got, err := ReadTableMD(strings.NewReader(v.rawTable))
-		if err != nil {
-			t.Fatalf("%s (error: %v)", s, err)
-		}
+	for name, test := range tests {
+		test := test
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			got, err := ReadTableMD(strings.NewReader(test.rawTable))
+			if err != nil {
+				t.Fatalf("%s (error: %v)", name, err)
+			}
 
-		if !isValid(got, v.want) {
-			t.Fatalf("%s (want: %v, got: %v)", s, v.want, got)
-		}
+			if !isValid(got, test.want) {
+				t.Fatalf("%s (want: %v, got: %v)", name, test.want, got)
+			}
+		})
 	}
 }
