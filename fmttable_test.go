@@ -46,18 +46,35 @@ func TestReadTableMD(t *testing.T) {
 	}{
 		"empty": {
 			rawTable: "",
-			want:     Table([][]string{}),
+			want:     Table{},
 		},
 		"single line": {
 			rawTable: `| a | b | c |`,
-			want:     Table([][]string{{"a", "b", "c"}}),
+			want:     Table{{"a", "b", "c"}},
+		},
+		"multi line": {
+			rawTable: `
+			| a | b | c |
+			| golang | hello | gopher |`,
+			want: Table{{"a", "b", "c"}, {"golang", "hello", "gopher"}},
+		},
+		"uneven table": {
+			rawTable: `
+			| a | b |
+			| foo | bar | baz | qux | quux |
+			| golang | hello | gopher |`,
+			want: Table{
+				{"a", "b"},
+				{"foo", "bar", "baz", "qux", "quux"},
+				{"golang", "hello", "gopher"},
+			},
 		},
 	}
 
 	for name, test := range tests {
+		test := test
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
-
 			got, err := ReadTableMD(strings.NewReader(test.rawTable))
 			if err != nil {
 				t.Fatalf("%s (error: %v)", name, err)
