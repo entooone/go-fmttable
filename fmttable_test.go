@@ -95,8 +95,12 @@ func TestPrintMD(t *testing.T) {
 		want  string
 	}{
 		"empty": {
-			table: Table{{}},
+			table: Table{},
 			want:  "",
+		},
+		"skip empty line": {
+			table: Table{{"a", "b"}, {}, {"c", "d"}},
+			want:  "| a | b |\n| c | d |\n",
 		},
 		"single line": {
 			table: Table{{"a", "b", "c"}},
