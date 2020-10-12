@@ -27,6 +27,10 @@ type Table [][]string
 
 // Pretty write the Markdown table to w
 func (t Table) Pretty(w io.Writer) {
+	if len(t) == 0 {
+		return
+	}
+
 	maxCol := len(t[0])
 	for _, row := range t {
 		if len(row) > maxCol {
@@ -45,6 +49,10 @@ func (t Table) Pretty(w io.Writer) {
 	}
 
 	for _, row := range t {
+		if len(row) == 0 {
+			continue
+		}
+
 		for i, v := range row {
 			fv := runewidth.FillRight(v, colSizes[i])
 			fmt.Fprintf(w, "| %s ", fv)
