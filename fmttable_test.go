@@ -16,6 +16,7 @@ package fmttable
 
 import (
 	"bytes"
+	"errors"
 	"strings"
 	"testing"
 )
@@ -86,6 +87,23 @@ func TestReadTableMD(t *testing.T) {
 			}
 		})
 	}
+}
+
+type MockFailReader struct{}
+
+func (m *MockFailReader) Read(p []byte) (n int, err error) {
+	return 0, errors.New("this mock always returns an error")
+}
+
+func TestReadTableMDFail(t *testing.T) {
+	t.Parallel()
+	t.Run("error", func(t *testing.T) {
+		t.Parallel()
+		_, err := ReadTableMD(&MockFailReader{})
+		if err == nil {
+			t.Fatalf("the test should have error")
+		}
+	})
 }
 
 func TestPrintMD(t *testing.T) {
