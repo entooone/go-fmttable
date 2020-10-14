@@ -27,18 +27,18 @@ import (
 type Table [][]string
 
 // Equal reports whether x and y are equal
-func (x Table) Equal(y Table) bool {
-	if len(x) != len(y) {
+func (t Table) Equal(td Table) bool {
+	if len(t) != len(td) {
 		return false
 	}
 
-	for i := 0; i < len(y); i++ {
-		if len(x[i]) != len(y[i]) {
+	for i := 0; i < len(td); i++ {
+		if len(t[i]) != len(td[i]) {
 			return false
 		}
 
-		for j := 0; j < len(y[i]); j++ {
-			if x[i][j] != y[i][j] {
+		for j := 0; j < len(td[i]); j++ {
+			if t[i][j] != td[i][j] {
 				return false
 			}
 		}
