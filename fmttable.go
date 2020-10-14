@@ -23,9 +23,30 @@ import (
 	"github.com/mattn/go-runewidth"
 )
 
+// Table represents a table of strings in two dimensions
 type Table [][]string
 
-// Pretty write the Markdown table to w
+// Equal reports whether x and y are equal
+func (x Table) Equal(y Table) bool {
+	if len(x) != len(y) {
+		return false
+	}
+
+	for i := 0; i < len(y); i++ {
+		if len(x[i]) != len(y[i]) {
+			return false
+		}
+
+		for j := 0; j < len(y[i]); j++ {
+			if x[i][j] != y[i][j] {
+				return false
+			}
+		}
+	}
+	return true
+}
+
+// Pretty writes the Markdown table to w
 func (t Table) Pretty(w io.Writer) {
 	if len(t) == 0 {
 		return
@@ -74,7 +95,7 @@ func readLineMD(line string) []string {
 	return es
 }
 
-// ReadTableMD load Table from a Markdown table
+// ReadTableMD loads Table from a Markdown table
 func ReadTableMD(r io.Reader) (Table, error) {
 	s, err := ioutil.ReadAll(r)
 	if err != nil {

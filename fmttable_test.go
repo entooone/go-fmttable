@@ -21,23 +21,44 @@ import (
 	"testing"
 )
 
-func isValid(a, b Table) bool {
-	if len(a) != len(b) {
-		return false
+func TestEqual(t *testing.T) {
+	t.Parallel()
+	tests := map[string]struct {
+		t1   Table
+		t2   Table
+		want bool
+	}{
+		"same table": {
+			t1:   Table{{"a"}, {"b", "c", "d"}, {"e", "f"}},
+			t2:   Table{{"a"}, {"b", "c", "d"}, {"e", "f"}},
+			want: true,
+		},
+		"different length table": {
+			t1:   Table{},
+			t2:   Table{{}},
+			want: false,
+		},
+		"different length table 2": {
+			t1:   Table{{}},
+			t2:   Table{{"a"}},
+			want: false,
+		},
+		"has different element": {
+			t1:   Table{{"a"}},
+			t2:   Table{{"b"}},
+			want: false,
+		},
 	}
-
-	for i := 0; i < len(b); i++ {
-		if len(a[i]) != len(b[i]) {
-			return false
-		}
-
-		for j := 0; j < len(b[i]); j++ {
-			if a[i][j] != b[i][j] {
-				return false
+	for name, test := range tests {
+		test := test
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			got := test.t1.Equal(test.t2)
+			if got != test.want {
+				t.Fatalf("%s (want: %v, got: %v)", name, test.want, got)
 			}
-		}
+		})
 	}
-	return true
 }
 
 func TestReadTableMD(t *testing.T) {
@@ -82,7 +103,7 @@ func TestReadTableMD(t *testing.T) {
 				t.Fatalf("%s (error: %v)", name, err)
 			}
 
-			if !isValid(got, test.want) {
+			if !got.Equal(test.want) {
 				t.Fatalf("%s (want: %v, got: %v)", name, test.want, got)
 			}
 		})
