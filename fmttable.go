@@ -82,6 +82,45 @@ func (t Table) Pretty(w io.Writer) {
 	}
 }
 
+// PrettyCSV writes the CSV table to w
+func (t Table) PrettyCSV(w io.Writer) {
+	if len(t) == 0 {
+		return
+	}
+
+	maxCol := len(t[0])
+	for _, row := range t {
+		if len(row) > maxCol {
+			maxCol = len(row)
+		}
+	}
+
+	colSizes := make([]int, maxCol)
+	for _, row := range t {
+		for i, v := range row {
+			vlen := runewidth.StringWidth(v)
+			if colSizes[i] < vlen {
+				colSizes[i] = vlen
+			}
+		}
+	}
+
+	for _, row := range t {
+		if len(row) == 0 {
+			continue
+		}
+
+		for i, v := range row {
+			fv := runewidth.FillRight(v, colSizes[i])
+			fmt.Fprintf(w, "%s", fv)
+			if i != len(row)-1 {
+				fmt.Fprintf(w, ", ")
+			}
+		}
+		fmt.Fprintf(w, "\n")
+	}
+}
+
 func readLineMD(line string) []string {
 	if line == "" {
 		return []string{}

@@ -180,3 +180,57 @@ func TestPrintMD(t *testing.T) {
 		})
 	}
 }
+
+func TestPrintCSV(t *testing.T) {
+	t.Parallel()
+	tests := map[string]struct {
+		table Table
+		want  string
+	}{
+		"empty": {
+			table: Table{},
+			want:  "",
+		},
+		"skip empty line": {
+			table: Table{{"a", "b"}, {}, {"c", "d"}},
+			want:  "a, b\nc, d\n",
+		},
+		"single line": {
+			table: Table{{"a", "b", "c"}},
+			want:  "a, b, c\n",
+		},
+		"multi line": {
+			table: Table{{"a", "b", "c"}, {"golang", "hello", "gopher"}},
+			want:  "a     , b    , c     \ngolang, hello, gopher\n",
+		},
+		"uneven table": {
+			table: Table{
+				{"a", "b"},
+				{"foo", "bar", "baz", "qux", "quux"},
+				{"golang", "hello", "gopher"},
+			},
+			want: "a     , b    \nfoo   , bar  , baz   , qux, quux\ngolang, hello, gopher\n",
+		},
+		"include japanese": {
+			table: Table{
+				{"a", "b"},
+				{"hello", "world"},
+				{"こんにちは", "世界"},
+			},
+			want: "a         , b    \nhello     , world\nこんにちは, 世界 \n",
+		},
+	}
+
+	for name, test := range tests {
+		test := test
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			buf := new(bytes.Buffer)
+			test.table.PrettyCSV(buf)
+			got := buf.String()
+			if got != test.want {
+				t.Fatalf("%s (want: %#v, got: %#v)", name, test.want, got)
+			}
+		})
+	}
+}
