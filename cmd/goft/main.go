@@ -27,5 +27,5 @@ func main() {
 		log.Fatal(err)
 	}
 
-	table.Pretty(os.Stdout)
+	table.WriteMDFormat(os.Stdout)
 }

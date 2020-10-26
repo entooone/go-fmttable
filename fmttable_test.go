@@ -172,7 +172,7 @@ func TestPrintMD(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 			buf := new(bytes.Buffer)
-			test.table.Pretty(buf)
+			test.table.WriteMDFormat(buf)
 			got := buf.String()
 			if got != test.want {
 				t.Fatalf("%s (want: %#v, got: %#v)", name, test.want, got)
@@ -226,7 +226,7 @@ func TestPrintCSV(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 			buf := new(bytes.Buffer)
-			test.table.PrettyCSV(buf)
+			test.table.WriteCSVFormat(buf)
 			got := buf.String()
 			if got != test.want {
 				t.Fatalf("%s (want: %#v, got: %#v)", name, test.want, got)

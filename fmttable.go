@@ -46,8 +46,8 @@ func (t Table) Equal(td Table) bool {
 	return true
 }
 
-// Pretty writes the Markdown table to w
-func (t Table) Pretty(w io.Writer) {
+// WriteMDFormat writes the Markdown table to w
+func (t Table) WriteMDFormat(w io.Writer) {
 	if len(t) == 0 {
 		return
 	}
@@ -82,8 +82,8 @@ func (t Table) Pretty(w io.Writer) {
 	}
 }
 
-// PrettyCSV writes the CSV table to w
-func (t Table) PrettyCSV(w io.Writer) {
+// WriteCSVFormat writes the CSV table to w
+func (t Table) WriteCSVFormat(w io.Writer) {
 	if len(t) == 0 {
 		return
 	}
